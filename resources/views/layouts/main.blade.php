@@ -13,7 +13,7 @@
 
 <body>
 
-    @include('partials.nav_bar');
+    @include('partials.nav_bar')
 
     <div class="container mt-4">
         @yield('content')
