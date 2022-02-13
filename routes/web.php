@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PostController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,3 +35,17 @@ Route::get('/posts', [PostController::class, 'index']);
 //* 'post:slug' means find by slug ( get where slug == 'slug' )
 //* '{post} means default find by id
 Route::get('posts/{post:slug}', [PostController::class, 'show']);
+
+Route::get('categories', function () {
+    return view('categories', [
+        "title" => "Post Categories",
+        "categories" => Category::all()
+    ]);
+});
+
+Route::get('categories/{category:slug}', function (Category $category) {
+    return view('category', [
+        "title" => $category->name,
+        "posts" => $category->posts
+    ]);
+});
