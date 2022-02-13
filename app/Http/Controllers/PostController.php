@@ -10,8 +10,10 @@ class PostController extends Controller
     public function index()
     {
         return view('posts', [
-            "title" => "Posts",
-            "posts" => Post::latest()->get()
+            "title" => "All Posts",
+            //* tools clockwork
+            //* eager loading
+            "posts" => Post::with(['author', 'category'])->latest()->get()
         ]);
     }
 
