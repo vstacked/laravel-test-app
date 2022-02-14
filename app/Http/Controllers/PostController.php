@@ -11,9 +11,10 @@ class PostController extends Controller
     {
         return view('posts', [
             "title" => "All Posts",
+            "active" => "posts",
             //* tools clockwork
             //* eager loading
-            "posts" => Post::with(['author', 'category'])->latest()->get()
+            "posts" => Post::latest()->get()
         ]);
     }
 
@@ -21,6 +22,7 @@ class PostController extends Controller
     {
         return view('post', [
             "title" => "Post",
+            "active" => "posts",
             "post" => $post
         ]);
     }
