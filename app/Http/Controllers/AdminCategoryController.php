@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Cviebrock\EloquentSluggable\Services\SlugService;
 use Illuminate\Http\Request;
 
 class AdminCategoryController extends Controller
@@ -37,7 +38,15 @@ class AdminCategoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required',
+        ]);
+        $slug = SlugService::createSlug(Category::class, 'slug', $request->name);
+        $validatedData['slug'] = $slug;
+
+        Category::create($validatedData);
+
+        return redirect('/dashboard/categories')->with('success', 'Category created successfully');
     }
 
     /**
@@ -71,7 +80,17 @@ class AdminCategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+        ]);
+
+        if ($request->slug != $category->slug) {
+            $slug = SlugService::createSlug(Category::class, 'slug', $request->name);
+            $validatedData['slug'] = $slug;
+        }
+
+        Category::where('id', $category->id)->update($validatedData);
+        return redirect('/dashboard/categories')->with('success', 'Category updated successfully');
     }
 
     /**
@@ -82,6 +101,7 @@ class AdminCategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        //
+        Category::destroy($category->id);
+        return redirect('/dashboard/categories')->with('success', 'Category has been deleted');
     }
 }
